@@ -24,7 +24,7 @@ void setup()
 {     
   Serial.begin(115200);
   //Blynk.begin(auth, ssid, pass);    
-  delay(2500);
+  delay(2000);
   pinMode(ledpin,OUTPUT);
   pinMode(pulsador_on_off,INPUT_PULLUP);
   pinMode(pulsador_modo,INPUT_PULLUP);
@@ -45,15 +45,15 @@ void modos()
   int valor;
   switch (modo){
     case 0: // modo bajo AC 20%
-      valor = (20*1023) / 100; 
+      valor = (20*1023) / 100; // valor = 100 (opcion 2)
       Serial.print("MODO: BAJO (20%) - PWM: "); // IMPRIMIR EL MODO
       break;
     case 1: // modo medio AC 60%
-      valor = (60*1023) / 100;
+      valor = (60*1023) / 100; // valor = 700 (opcion 2)
       Serial.print("MODO: MEDIO (60%) - PWM: "); // IMPRIMIR EL MODO 
       break;
     case 2: // modo alto AC 100%
-      valor = 1023;
+      valor = 1023; 
       Serial.print("MODO: ALTO (100%) - PWM: "); // IMPRIMIR EL MODO
   }
   Serial.println(valor); // IMPRIMIR EL VALOR 
