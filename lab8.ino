@@ -24,12 +24,12 @@ bool ac_on = false;
 bool ac_allowed = false; 
 int modo = 0;
 
-// Sensor BMP280 (I2C)
+// Sensor BMP280
 Adafruit_BMP280 bmp; // default I2C address 0x76 
 
 // Parámetros del control por temperatura
-float THRESHOLD_C = 29;    // umbral definido por el diseñador (puedes cambiarlo)
-const float HYSTERESIS = 0.5; // evita oscilaciones: apagará si baja THRESHOLD - HYSTERESIS
+float THRESHOLD_C = 29;    // umbral
+const float HYSTERESIS = 0.5; // apagará si baja THRESHOLD - HYSTERESIS
 
 // Temporización lectura sensor
 unsigned long lastTempMillis = 0;
@@ -38,18 +38,16 @@ const unsigned long TEMP_INTERVAL_MS = 2000; // cada 2 s
 void setup()
 {     
   Serial.begin(115200);   
-  //delay(2000);
   pinMode(ledpin,OUTPUT);
   pinMode(pulsador_on_off,INPUT_PULLUP);
   pinMode(pulsador_modo,INPUT_PULLUP);
   
   
   // Inicializar BMP280
-  if (!bmp.begin(0x76)) { // prueba dirección 0x76; si falla, intenta 0x77
+  if (!bmp.begin(0x76)) { // prueba dirección 0x76, si falla intenta 0x77
     Serial.println("No se encontró BMP280 en 0x76, intentando 0x77...");
     if (!bmp.begin(0x77)) {
       Serial.println("ERROR: BMP280 no detectado. Revisa conexiones.");
-      // No salir: dejamos el programa corriendo pero la lectura de temp quedará inactiva.
     } else {
       Serial.println("BMP280 detectado en 0x77.");
     }
@@ -116,21 +114,21 @@ void modos()
   int valor;
   switch (modo){
     case 0: // modo bajo AC 20%
-      valor = (20*1023) / 100; // valor = 100 (opcion 2)
-      textoModo = "MODO: BAJO (20%) "; // IMPRIMIR EL MODO
+      valor = (20*1023) / 100; 
+      textoModo = "MODO: BAJO (20%) "; 
       break;
     case 1: // modo medio AC 60%
-      valor = (60*1023) / 100; // valor = 700 (opcion 2)
-      textoModo = "MODO: MEDIO (60%) "; // IMPRIMIR EL MODO 
+      valor = (60*1023) / 100; 
+      textoModo = "MODO: MEDIO (60%) ";  
       break;
     case 2: // modo alto AC 100%
       valor = 1023; 
-      textoModo = "MODO: ALTO (100%) "; // IMPRIMIR EL MODO
+      textoModo = "MODO: ALTO (100%) ";
   }
   Serial.print(textoModo); // IMPRIMIR EL MODO
   Serial.println(valor); // IMPRIMIR EL VALOR 
   analogWrite(ledpin, valor);
-
+  // Enviar los datos a blynk
   Blynk.virtualWrite(V5, textoModo); // texto del modo
   Blynk.virtualWrite(V6, valor);  // valor PWM numérico
 
@@ -189,7 +187,7 @@ void loop()
       Serial.print(" °C  | ");
     }
 
-      // Actualizar bloqueo por temperatura (histeresis incluida)
+      // Actualizar bloqueo por temperatura 
     actualizarBloqueoPorTemperatura(tempC);
 
     Serial.print("AC permitido? ");
